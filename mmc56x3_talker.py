@@ -12,7 +12,7 @@ def publish_sensor_data():
     rate = rospy.Rate(10)  # 10 Hz
 
     # Initialize I2C bus and sensors
-    i2c = busio.I2C(board.SCL, board.SDA)
+    i2c = busio.I2C()
     mmc = adafruit_mmc56x3.MMC5603(i2c)
 
     while not rospy.is_shutdown():
