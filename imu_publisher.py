@@ -4,7 +4,6 @@ from sensor_msgs.msg import Imu
 import smbus
 from time import sleep
 
-# MPU6050 Registers
 PWR_MGMT_1 = 0x6B
 SMPLRT_DIV = 0x19
 CONFIG = 0x1A
@@ -40,14 +39,13 @@ MPU_Init()
 def imu_publisher():
     rospy.init_node('imu_publisher_node', anonymous=True)
     imu_pub = rospy.Publisher('imu/data', Imu, queue_size=10)
-    rate = rospy.Rate(10)  # 10 Hz
+    rate = rospy.Rate(10) 
 
     while not rospy.is_shutdown():
         imu_msg = Imu()
         imu_msg.header.stamp = rospy.Time.now()
-        imu_msg.header.frame_id = "imu_link"  # Change according to your frame
+        imu_msg.header.frame_id = "imu_link"  
 
-        # Read Accelerometer and Gyroscope values
         acc_x = read_raw_data(ACCEL_XOUT_H)
         acc_y = read_raw_data(ACCEL_YOUT_H)
         acc_z = read_raw_data(ACCEL_ZOUT_H)
@@ -55,7 +53,6 @@ def imu_publisher():
         gyro_y = read_raw_data(GYRO_YOUT_H)
         gyro_z = read_raw_data(GYRO_ZOUT_H)
 
-        # Populate message fields (converting to m/s^2 and rad/s, respectively)
         imu_msg.linear_acceleration.x = acc_x / 16384.0 * 9.80665
         imu_msg.linear_acceleration.y = acc_y / 16384.0 * 9.80665
         imu_msg.linear_acceleration.z = acc_z / 16384.0 * 9.80665
@@ -64,8 +61,8 @@ def imu_publisher():
         imu_msg.angular_velocity.y = gyro_y / 131.0
         imu_msg.angular_velocity.z = gyro_z / 131.0
 
-        # Publish the message
         imu_pub.publish(imu_msg)
+        rospy.loginfo(imu_msg)
         rate.sleep()
 
 if __name__ == '__main__':
