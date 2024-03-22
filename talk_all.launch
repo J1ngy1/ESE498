@@ -1,0 +1,13 @@
+<launch>
+   <node pkg="beginner_tutorials" type="talk_mmc5603.py"  name="talker1">
+   </node>
+   <node pkg="beginner_tutorials" type="talk_keyboard.py" name="talker2">
+   </node>
+   <node pkg="beginner_tutorials" type="talk_imu.py"      name="talker3">
+   </node>
+
+   <node pkg="beginner_tutorials" type="listen3.py" name="listen" output="screen">
+   </node>
+
+</launch>
+
