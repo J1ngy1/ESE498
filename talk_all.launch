@@ -1,12 +1,13 @@
 <launch>
-   <node pkg="beginner_tutorials" type="talk_mmc5603.py"  name="talker1">
+   <node pkg="beginner_tutorials" type="Lidar_talker.py"  name="talker1">
    </node>
    <node pkg="beginner_tutorials" type="talk_keyboard.py" name="talker2">
    </node>
-   <node pkg="beginner_tutorials" type="talk_imu.py"      name="talker3">
+   <node pkg="beginner_tutorials" type="imu_publisher.py"      name="talker3">
    </node>
-
-   <node pkg="beginner_tutorials" type="listen3.py" name="listen" output="screen">
+   <node pkg="beginner_tutorials" type="mag_publisher.py"      name="talker4">
+   </node>
+   <node pkg="beginner_tutorials" type="subscriber.py" name="listen" output="screen">
    </node>
 
 </launch>
