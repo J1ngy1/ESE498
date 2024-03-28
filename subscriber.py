@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 import rospy
 from beginner_tutorials.msg import Magnetometer
-from sensor_msgs.msg import LaserScan
+from sensor_msgs.msg import LaserScan, Imu
 from std_msgs.msg import String
 import math
+import time
 from board import SCL, SDA
 import busio
 from adafruit_pca9685 import PCA9685
@@ -31,7 +32,7 @@ def call_key(data):
     global status
     if (isinstance(int(str(data.data)), int)):
         status = int(str(data.data))
-        if (status > 5):
+        if (status > 8):
             status = 0
 
     if status == 5:
@@ -45,6 +46,10 @@ def call_key(data):
         status = 0
     elif status == 7:
         servo7.angle = 135        
+        time.sleep(0.5)
+        status = 0
+    elif status == 8:
+        servo7.angle = 90        
         time.sleep(0.5)
         status = 0
 
@@ -81,11 +86,4 @@ def listener():
     rospy.spin()
 
 if __name__ == '__main__':
-    try:
-        listener()
-    except rospy.ROSInterruptException:
-        pass
-    finally:
-        motor_pwm.stop()
-        steer_pwm.stop()
-        GPIO.cleanup()
+    listener()
