@@ -3,19 +3,28 @@ import rospy
 from beginner_tutorials.msg import Magnetometer
 from sensor_msgs.msg import LaserScan
 from std_msgs.msg import String
-import RPi.GPIO as GPIO
-import time
-
-motor_pin = 18  # PWM pin connected to the motor
-
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(motor_pin, GPIO.OUT)
-
-motor_pwm = GPIO.PWM(motor_pin, 50)  # 50 Hz
-motor_pwm.start(0)  # Start with motor off
-
+import math
+from board import SCL, SDA
+import busio
+from adafruit_pca9685 import PCA9685
+from adafruit_motor import servo
 status = 0
 
+def Servo_Motor_Initialization():
+    i2c_bus = busio.I2C(SCL, SDA)
+    pca = PCA9685(i2c_bus)
+    pca.frequency = 100
+    return pca
+    
+def Motor_Speed(pca, percent):
+    speed = (percent * 3277) + 65535 * 0.15
+    pca.channels[15].duty_cycle = math.floor(speed)
+
+pca = Servo_Motor_Initialization()
+Motor_Speed(pca, 0) 
+channel_num = 14
+servo7 = servo.Servo(pca.channels[channel_num])
+    
 def call_key(data):
     rospy.loginfo(rospy.get_caller_id() + 'Keyboard %s', data.data)
     print("keyboard: " + str(data.data))
@@ -25,10 +34,19 @@ def call_key(data):
         if (status > 5):
             status = 0
 
-        if status == 5:
-            motor_pwm.ChangeDutyCycle(50)
-            time.sleep(1) 
-            motor_pwm.ChangeDutyCycle(0)
+    if status == 5:
+        Motor_Speed(pca, 0.15)
+        time.sleep(1)  # Run for 1 second
+        Motor_Speed(pca, 0)
+        status = 0
+    elif status == 6:
+        servo7.angle = 45
+        time.sleep(0.5)
+        status = 0
+    elif status == 7:
+        servo7.angle = 135        
+        time.sleep(0.5)
+        status = 0
 
 def call_lidar(data):
     if (status == 1 or status == 2):
@@ -69,4 +87,5 @@ if __name__ == '__main__':
         pass
     finally:
         motor_pwm.stop()
+        steer_pwm.stop()
         GPIO.cleanup()
