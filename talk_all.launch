@@ -2,12 +2,10 @@
    <include file="$(find rplidar_ros)/launch/rplidar_a1.launch"/>
    <node pkg="beginner_tutorials" type="talk_keyboard.py" name="talker2">
    </node>
-   <node pkg="beginner_tutorials" type="imu_publisher.py"      name="talker3">
+   <node pkg="beginner_tutorials" type="imu_publisher.py" name="talker3">
    </node>
-   <node pkg="beginner_tutorials" type="mag_publisher.py"      name="talker4">
+   <node pkg="beginner_tutorials" type="mag_publisher.py" name="talker4">
    </node>
-   <node pkg="beginner_tutorials" type="subscriber.py" name="listen" output="screen">
+   <node pkg="beginner_tutorials" type="subscriber.py" name="listener" output="screen">
    </node>
-
 </launch>
-
